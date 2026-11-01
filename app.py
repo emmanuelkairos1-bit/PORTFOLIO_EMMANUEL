@@ -1,16 +1,18 @@
 """
-Serveur de production du portfolio d'Emmanuel Ajavon.
+Serveur du portfolio d'Emmanuel Ajavon (tous les fichiers à la racine).
 
-Lancement local :   python app.py          -> http://localhost:8000
-Production :        gunicorn app:app       (Render, Railway, Fly.io, VPS...)
+Local :        python app.py        -> http://localhost:8000
+Production :   gunicorn app:app
 """
 import os
-from flask import Flask, send_from_directory, abort
+from flask import Flask, send_from_directory
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__, static_folder=None)
 
-FICHIERS_PUBLICS = {"index.html", "css", "js", "assets", "robots.txt"}
+# Seuls ces fichiers sont publics (app.py et requirements.txt restent privés)
+PUBLICS = {"index.html", "style.css", "app.js", "photo.jpg", "jang.jpg",
+           "poster.jpg", "robots.txt"}
 
 
 @app.route("/")
@@ -18,17 +20,15 @@ def accueil():
     return send_from_directory(BASE, "index.html")
 
 
-@app.route("/<path:chemin>")
-def statique(chemin):
-    # On n'expose que les dossiers du site : jamais app.py ni requirements.txt
-    if chemin.split("/")[0] not in FICHIERS_PUBLICS:
-        abort(404)
-    return send_from_directory(BASE, chemin)
+@app.route("/<nom>")
+def fichier(nom):
+    if nom in PUBLICS:
+        return send_from_directory(BASE, nom)
+    return send_from_directory(BASE, "index.html")
 
 
 @app.after_request
 def entetes(rep):
-    # Cache long pour les images, court pour le code
     if rep.mimetype and rep.mimetype.startswith("image/"):
         rep.headers["Cache-Control"] = "public, max-age=2592000"
     else:
@@ -37,12 +37,6 @@ def entetes(rep):
     rep.headers["X-Frame-Options"] = "DENY"
     rep.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     return rep
-
-
-@app.errorhandler(404)
-def introuvable(_):
-    # Site à page unique : toute route inconnue renvoie l'accueil
-    return send_from_directory(BASE, "index.html"), 200
 
 
 if __name__ == "__main__":
