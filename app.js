@@ -1,5 +1,5 @@
 "use strict";
-const IMG={photo:"assets/img/photo.jpg",jang:"assets/img/jang.jpg",poster:"assets/img/poster.jpg"};
+const IMG={photo:"photo.jpg",jang:"jang.jpg",poster:"poster.jpg"};
 const SITE={email:"emmanuelleajavon06@gmail.com",wa:"221785278668",slogan:"Dev Web | Réseau | Cyber | IA",
  soc:[["WA","WhatsApp","https://wa.me/221785278668"],["in","LinkedIn","https://www.linkedin.com/in/emmanuel-ajavon-1a3495394/"],["IG","Instagram","https://www.instagram.com/_her_emmanuel_/"],["TT","TikTok","https://www.tiktok.com/@emma_ajavon"]]};
 const NAV=[["/","Accueil"],["/a-propos","À propos"],["/parcours","Parcours"],["/lab","Concept Lab"],["/futur","Futur"],["/stack","Labo technique"],["/game","Jeu"],["/contact","Contact"]];
